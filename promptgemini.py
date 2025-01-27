@@ -28,7 +28,7 @@ def generate_prompts(product_name, product_description, target_market, product_p
     ]
     return prompts
 
-def send_email(email_address):
+def send_email(email_address):  # Add indentation for the function block
     message = MIMEText(f"New email signup: {email_address}")
     message['Subject'] = "New Signup for Free Web Apps"
     message['From'] = SENDER_EMAIL
@@ -70,9 +70,3 @@ def main():
                 label="Download prompts.txt",
                 data=prompt_text,
                 file_name="prompts.txt",
-                mime="text/plain"
-            )
-            st.subheader("Preview of prompts.txt")
-            st.text(prompt_text[:1000] + ("..." if len(prompt_text) > 1000 else ""))
-
-        st.subheader("Get More Free Web Apps!")
