@@ -2,22 +2,41 @@ import streamlit as st
 import smtplib
 from email.mime.text import MIMEText
 
+# Streamlit Secrets (replace with placeholders)
+def get_secret(secret_name):
+  """Fetches a secret from Streamlit Secrets"""
+  return st.secrets[secret_name]
+
+SENDER_EMAIL = get_secret("SENDER_EMAIL")
+SENDER_PASSWORD = get_secret("SENDER_PASSWORD")
+RECEIVER_EMAIL = get_secret("RECEIVER_EMAIL")
+CORRECT_PASSWORD = get_secret("CORRECT_PASSWORD")
+
+
 def generate_prompts(product_name, product_description, target_market, product_price):
-    # ... (same as before)
+    prompts = [
+        f"1. Create a marketing slogan for {product_name}, a {product_description}, targeting {target_market}.",
+        f"2. Write a product description for {product_name}, emphasizing its benefits for {target_market}.",
+        f"3. Generate a social media post promoting {product_name}, priced at {product_price}, to {target_market}.",
+        f"4. Suggest 5 unique selling points for {product_name}, a {product_description}, for {target_market}.",
+        f"5. Write an email campaign introducing {product_name} to {target_market}, highlighting its price of {product_price}.",
+        f"6. Create a list of 10 potential blog post titles about {product_name} for {target_market}.",
+        f"7. Generate a script for a 30-second advertisement for {product_name}, targeting {target_market}.",
+        f"8. Write a press release announcing the launch of {product_name}, a {product_description}, priced at {product_price}.",
+        f"9. Suggest ways to improve the packaging of {product_name} to appeal to {target_market}.",
+        f"10. Generate a list of 5 influencers who could promote {product_name} to {target_market}."
+    ]
+    return prompts
 
 def send_email(email_address):
-    sender_email = st.secrets["SENDER_EMAIL"]
-    sender_password = st.secrets["SENDER_PASSWORD"]
-    receiver_email = st.secrets["RECEIVER_EMAIL"]
-
     message = MIMEText(f"New email signup: {email_address}")
     message['Subject'] = "New Signup for Free Web Apps"
-    message['From'] = sender_email
-    message['To'] = receiver_email
+    message['From'] = SENDER_EMAIL
+    message['To'] = RECEIVER_EMAIL
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(sender_email, sender_password)
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
             server.send_message(message)
         st.success("Thank you for subscribing! You'll receive updates soon.")
     except Exception as e:
@@ -26,10 +45,9 @@ def send_email(email_address):
 def main():
     st.title("Product Prompt Generator")
 
-    correct_password = st.secrets["CORRECT_PASSWORD"]
     entered_password = st.text_input("Enter Password:", type="password")
 
-    if entered_password == correct_password:
+    if entered_password == CORRECT_PASSWORD:
         if 'all_prompts' not in st.session_state:
             st.session_state.all_prompts = []
 
@@ -58,15 +76,3 @@ def main():
             st.text(prompt_text[:1000] + ("..." if len(prompt_text) > 1000 else ""))
 
         st.subheader("Get More Free Web Apps!")
-        email_address = st.text_input("Enter your email address:")
-        if st.button("Submit"):
-            if email_address:
-                send_email(email_address)
-            else:
-                st.warning("Please enter your email address.")
-
-    elif entered_password:
-        st.error("Incorrect Password")
-
-if __name__ == "__main__":
-    main()
