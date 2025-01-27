@@ -66,7 +66,11 @@ def main():
 
         if st.session_state.all_prompts:
             prompt_text = "\n\n".join(st.session_state.all_prompts)
-            st.download_button(
+            st.download_button(  # Add closing parenthesis here
                 label="Download prompts.txt",
                 data=prompt_text,
                 file_name="prompts.txt",
+                mime="text/plain"
+            )
+            st.subheader("Preview of prompts.txt")
+            st
